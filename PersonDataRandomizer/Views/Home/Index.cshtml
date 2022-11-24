@@ -1,0 +1,14 @@
+﻿@{
+    ViewBag.Title = "Home Page";
+}
+
+<h2>Чуваки</h2>
+<hr />
+<table class="table table-hover">
+    @foreach (var p in ViewBag.People)
+    {
+        <tr>
+            <td>@p</td>
+        </tr>
+    }
+</table>
