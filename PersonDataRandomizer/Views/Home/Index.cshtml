@@ -1,14 +1,30 @@
 ﻿@{
     ViewBag.Title = "Home Page";
+    Layout = null;
 }
-
-<h2>Чуваки</h2>
-<hr />
-<table class="table table-hover">
-    @foreach (var p in ViewBag.People)
-    {
-        <tr>
-            <td>@p</td>
-        </tr>
-    }
-</table>
+<!DOCTYPE html>
+<html>
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>@ViewBag.Title</title>
+    @Styles.Render("~/Content/css")
+    @Scripts.Render("~/bundles/modernizr")
+    @Scripts.Render("~/bundles/jquery")
+    @Scripts.Render("~/scripts/InfiniteScroll.js")
+    @Scripts.Render("~/bundles/bootstrap")
+</head>
+<body>
+    <div class="navbar navbar-fixed-top navbar-default">
+        <input type="radio" name="country" value="1" onchange="refresh()" checked="checked"> Россия
+        <input type="radio" name="country" value="2" onchange="refresh()"> México
+        <input type="radio" name="country" value="3" onchange="refresh()"> Great Britain
+        <input type="number" id="seed" value="0" min="0" step="1" onchange="seedChange(1)" />
+        <button type="button" onclick="seedChange(2)"> Seed </button>
+    </div>
+    <div id="scrolList">
+        @Html.Partial("PeopleSet")
+    </div>
+</body>
+</html>

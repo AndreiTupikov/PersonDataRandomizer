@@ -8,27 +8,60 @@ namespace PersonDataRandomizer.Controllers
 {
 	public class HomeController : Controller
 	{
-		PersonDataContext db = new PersonDataContext();
-        private Random random = new Random();
+		private PersonDataContext db = new PersonDataContext();
+        private static Random random = new Random();
+        private static int country;
+        private static int seed = random.Next();
 
-        public ActionResult Index(int country = 1)
+        public ActionResult Index()
         {
-            SelectList countries = new SelectList(db.Countries, "Id", "Name");
-            ViewBag.Countries = countries;
-            List<Person> people = new List<Person>();
-            for (int i = 0; i < 20; i++)
+            country = Request.QueryString["country"] == null ? 1 : Int32.Parse(Request.QueryString["country"]);
+            seed = Request.QueryString["seed"] != null ? Int32.Parse(Request.QueryString["seed"]) : seed;
+            int page = Request.QueryString["page"] == null ? 1 : Int32.Parse(Request.QueryString["page"]);
+            if (Request.IsAjaxRequest())
             {
-                var person = GetPerson(country);
-                people.Add(person);
+                return PartialView("PeopleSet", GetPeopleSet(page));
             }
-            ViewBag.People = people;
-            return View();
+            return View(GetPeopleSet(page));
         }
 
-        private Person GetPerson(int countryId)
+        private List<ResultPerson> GetPeopleSet(int page)
+        {
+            random = new Random(seed + page);
+            List<ResultPerson> people = new List<ResultPerson>();
+            for (int i = 0; i < 10; i++)
+            {
+                ResultPerson resultPerson = new ResultPerson();
+                switch (country)
+                {
+                    case 1:
+                        RussianPerson rp = (RussianPerson)GetPerson();
+                        resultPerson.FullName = rp.WriteFullName();
+                        resultPerson.Address = rp.WriteAddress();
+                        resultPerson.PhoneNumber = rp.WritePhoneNumber();
+                        break;
+                    case 2:
+                        MexicanPerson mp = (MexicanPerson)GetPerson();
+                        resultPerson.FullName = mp.WriteFullName();
+                        resultPerson.Address = mp.WriteAddress();
+                        resultPerson.PhoneNumber = mp.WritePhoneNumber();
+                        break;
+                    case 3:
+                        BritishPerson bp = (BritishPerson)GetPerson();
+                        resultPerson.FullName = bp.WriteFullName();
+                        resultPerson.Address = bp.WriteAddress();
+                        resultPerson.PhoneNumber = bp.WritePhoneNumber();
+                        break;
+                }
+                people.Add(resultPerson);
+            }
+            return people;
+        }
+
+        private Person GetPerson()
         {
             Person person = new Person(random.Next());
-            switch (countryId)
+            switch (country)
             {
                 case 1:
                     person = new RussianPerson(random.Next());
@@ -40,7 +73,7 @@ namespace PersonDataRandomizer.Controllers
                     person = new BritishPerson(random.Next());
                     break;
             }
-            person.CountryId = countryId;
+            person.CountryId = country;
             person.Gender = GetGender();
             person = GetFullName(person);
             person = GetDistrictData(person);
