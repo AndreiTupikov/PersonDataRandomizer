@@ -3,6 +3,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Web.Mvc;
+using System.Web.UI;
 
 namespace PersonDataRandomizer.Controllers
 {
@@ -15,14 +16,17 @@ namespace PersonDataRandomizer.Controllers
 
         public ActionResult Index()
         {
-            country = Request.QueryString["country"] == null ? 1 : Int32.Parse(Request.QueryString["country"]);
+            ViewBag.Seed = seed;
+            return View();
+        }
+
+        public ActionResult NextPage()
+        {
+            country = Int32.Parse(Request.QueryString["country"]);
             seed = Request.QueryString["seed"] != null ? Int32.Parse(Request.QueryString["seed"]) : seed;
             int page = Request.QueryString["page"] == null ? 1 : Int32.Parse(Request.QueryString["page"]);
-            if (Request.IsAjaxRequest())
-            {
-                return PartialView("PeopleSet", GetPeopleSet(page));
-            }
-            return View(GetPeopleSet(page));
+            ViewBag.Page = page;
+            return PartialView("PeopleSet", GetPeopleSet(page));
         }
 
         private List<ResultPerson> GetPeopleSet(int page)
