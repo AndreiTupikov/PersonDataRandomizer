@@ -12,7 +12,7 @@ namespace PersonDataRandomizer.Controllers
 		private PersonDataContext db = new PersonDataContext();
         private static Random random = new Random();
         private static int country;
-        private static int seed = random.Next();
+        private static int seed = random.Next(10000000);
 
         public ActionResult Index()
         {
