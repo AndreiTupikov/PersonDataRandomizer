@@ -25,6 +25,7 @@ async function loadItems() {
             $("#originalList").append(data);
         }
     });
+    if (errors > 0) await errorsAdd();
     loading = false;
 }
 
@@ -61,7 +62,6 @@ async function refresh() {
 }
 
 function makeErrors(x) {
-
     if (x == 1) {
         var e = document.getElementById('errorsN').value;
         if (e < 0) errors = 0;
@@ -71,34 +71,31 @@ function makeErrors(x) {
     document.getElementById('errorsN').value = errors;
     if (errors > 10) document.getElementById('errorsR').value = 10;
     else document.getElementById('errorsR').value = errors;
-
-    console.log(document.getElementById('originalList'))
-    console.log(document.getElementById('scrolList'))
-
     errorsAdd();
-
 }
 
 async function errorsAdd() {
 
     const originals = await document.querySelector('.originalList').querySelectorAll('.row');
     document.getElementById('scrolList').innerHTML = "";
-
+    const errorsCountRandom = await new Math.seedrandom(seed + country);
     for (let original of originals) {
         var elements = await original.cloneNode(true);
+        let number = elements.children[0].innerHTML;
         var errorsCount = await Math.floor(errors);
-        if (Math.random() < errors % 1) await errorsCount++;
+        if (errorsCountRandom() < errors % 1) await errorsCount++;
         var errorsByFields = await [0, 0, 0];
+        const errorsByFieldRandom = await new Math.seedrandom(seed + country + number);
         for (let i = 0; i < errorsCount; i++) {
-            var r = await Math.floor(Math.random() * 6)
+            var r = await Math.floor(errorsByFieldRandom() * 6)
             if (r < 2) await errorsByFields[0]++;
             else if (r < 5) await errorsByFields[1]++;
             else await errorsByFields[2]++;
         }
-        for (let fieldErrors of errorsByFields) {
+        for (let j = 0; j < errorsByFields.length; j++) {
             var element = await elements.children[1];
-            for (let j = 0; j < fieldErrors; j++) {
-                element.innerHTML = await newError(element.innerHTML);
+            for (let k = 0; k < errorsByFields[j]; k++) {
+                element.innerHTML = await newError(element.innerHTML, number, j, k);
             }
             await elements.append(element);
         }
@@ -106,10 +103,11 @@ async function errorsAdd() {
     }
 }
 
-function newError(str) {
-    var index = Math.floor(Math.random() * str.length);
-    var symbol = symbols[country - 1].charAt(Math.floor(Math.random() * symbols[country - 1].length));
-    switch (Math.floor(Math.random() * 3)) {
+async function newError(str, rowNumber, fieldNumber, errorNumber) {
+    const nextRandom = await new Math.seedrandom(seed + country + rowNumber + fieldNumber + errorNumber);
+    var index = Math.floor(nextRandom() * str.length);
+    var symbol = symbols[country - 1].charAt(Math.floor(nextRandom() * symbols[country - 1].length));
+    switch (Math.floor(nextRandom() * 3)) {
         case 0:
             return str.substring(0, index) + symbol + str.substring(index);
             break;
