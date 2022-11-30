@@ -28,3 +28,26 @@ textarea {
     background-color: #777;
     border-color: #fff
 }
+
+
+.radio-buttons {
+    width: 76px;
+    border: 1px solid #ced4da;
+}
+
+.input-seed {
+    border-radius: 0.375rem;
+    border: 1px solid #ced4da;
+    width: 152px;
+}
+
+.input-errors {
+    border-radius: 0.375rem;
+    border: 1px solid #ced4da;
+    width: 114px;
+    height: 38px;
+}
+
+input[type='number'] {
+    padding-left: 20px;
+}

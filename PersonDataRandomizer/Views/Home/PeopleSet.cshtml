@@ -4,11 +4,11 @@
     int number = (ViewBag.Page - 1) * 10;
     foreach (var person in Model)
     {
-        <div class="row" name="row">
-            <div style="margin-top: 12px" class="col-lg-1 col-md-1 col-sm-1 col-xs-1">@(++number)</div>
-            <div style="margin-top: 12px" class="col-lg-3 col-md-3 col-sm-3 col-xs-3">@person.FullName</div>
-            <div style="margin-top: 12px" class="col-lg-6 col-md-6 col-sm-6 col-xs-6">@person.Address</div>
-            <div style="margin-top: 12px" class="col-lg-2 col-md-2 col-sm-2 col-xs-2">@person.PhoneNumber</div>
-        </div>
+        <tr class ="table-row text-break" name="row">
+            <td class="text-nowrap" style="padding: 5px;">@(++number)</td>
+            <td style="padding: 5px;">@person.FullName</td>
+            <td style="padding: 5px;">@person.Address</td>
+            <td style="padding: 5px;">@person.PhoneNumber</td>
+        </tr>
     }
 }

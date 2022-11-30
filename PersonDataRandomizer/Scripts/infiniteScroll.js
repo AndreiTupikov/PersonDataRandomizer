@@ -3,7 +3,7 @@ var country = 1;
 var seed = 1;
 var page = 1;
 var errors = 0;
-const symbols = ["АаБбВвГгДдЕеЁёЖжЗзИиЙйКкЛлМмНнОоПпРрСсТтУуФфХхЦцЧчШшЩщЪъЫыЬьЭэЮюЯя1234567890", "AaáBbCcDdEeéFfGgHhIiíJjKkLlMmNnÑñOoóPpQqRrSsTtUuúüVvWwXxYyZz1234567890", "AaBbCcDdEeFfGgHhIiJjKkLlMmNnOoPpQqRrSsTtUuVvWwXxYyZz1234567890"];
+const symbols = [" АаБбВвГгДдЕеЁёЖжЗзИиЙйКкЛлМмНнОоПпРрСсТтУуФфХхЦцЧчШшЩщЪъЫыЬьЭэЮюЯя1234567890", " AaáBbCcDdEeéFfGgHhIiíJjKkLlMmNnÑñOoóPpQqRrSsTtUuúüVvWwXxYyZz1234567890", " AaBbCcDdEeFfGgHhIiJjKkLlMmNnOoPpQqRrSsTtUuVvWwXxYyZz1234567890"];
 
 (function () {
     setTimeout(() => { refresh() }, 100);
@@ -33,8 +33,9 @@ function seedChange(x) {
     if (x == 2) seed = Math.floor(Math.random() * 10000000);
     else {
         var s = document.getElementById('seed').value;
-        if (s > 0) seed = Math.floor(s);
-        else seed = 0;
+        if (s < 0) seed = 0;
+        else if (s < 100000000) seed = Math.floor(s);
+        else seed = 100000000;
     }
     document.getElementById('seed').value = seed;
     refresh();
@@ -75,10 +76,10 @@ function makeErrors(x) {
 }
 
 async function errorsAdd() {
-
-    const originals = await document.querySelector('.originalList').querySelectorAll('.row');
+    const originals = await document.querySelector('.originalList').querySelectorAll('.table-row');
     document.getElementById('scrolList').innerHTML = "";
     const errorsCountRandom = await new Math.seedrandom(seed + country);
+    console.log(originals)
     for (let original of originals) {
         var elements = await original.cloneNode(true);
         let number = elements.children[0].innerHTML;
