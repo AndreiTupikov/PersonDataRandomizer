@@ -116,7 +116,7 @@ async function newError(str, rowNumber, fieldNumber, errorNumber) {
             return str.substring(0, index) + str.substring(index+1)
             break;
         case 2:
-            return str.substring(0, index) + symbol + str.substring(index + 1)
-            break;
+            var twoSymbols = index == str.length - 1 ? str.substring(index - 1) : str.substring(index, index + 2);
+            return str.replace(twoSymbols, twoSymbols.split('').reverse().join(''));
     }
 }

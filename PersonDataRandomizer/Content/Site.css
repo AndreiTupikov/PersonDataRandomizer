@@ -51,3 +51,7 @@ textarea {
 input[type='number'] {
     padding-left: 20px;
 }
+
+tr {
+    height: 50px;
+}
